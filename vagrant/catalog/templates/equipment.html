@@ -1,0 +1,28 @@
+<html>
+
+<body>
+
+<h1> Equipment(s) </h1>
+
+<body>
+<a href = '#'>Add new equipment</a>
+
+{%for i in items%}
+
+<div>
+
+<p> {{ i.name}} </p>
+<p> {{ i.description}} </p> 
+<p> {{ i.price}} </p> 
+
+
+<a href='#'>Edit</a>
+
+<a href = '#'>Delete</a>
+
+</div>
+
+{% endfor %}
+</body>
+
+</html>
