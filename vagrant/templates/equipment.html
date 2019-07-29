@@ -6,7 +6,7 @@
 
 <body>
 
-<h1> {{c.name}} Equipment(s) </h1>
+<h1> {{ce.name}} Equipment(s) </h1>
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -20,30 +20,30 @@
 {% endwith %}
 
 <body>
-<a href = '{{url_for('newEquipmentItem',catagory_id = c.id)}}'>Add new equipment</a>
+<a href = '{{url_for('newEquipmentItem',catagory_id = ce.id)}}'>Add new equipment</a>
 </br>
 </br>
 
-{%for i in items%}
+{%for r in items%}
 
 <div>
 
 <p>Equipment name:  
-{{ i.name}}
+{{ r.name}}
 </br>
 
 Description:
-{{ i.description}} 
+{{ r.description}} 
 </br>
 
 Price:
-{{ i.price}}  
+{{ r.price}}  
 
 </p>
   
-<a href='{{url_for('editEquipmentItem',catagory_id = i.Catagory_id, equipment_id = i.id)}}'>Edit</a> 
+<a href='{{url_for('editEquipmentItem',catagory_id = r.Catagory_id, equipment_id = r.id)}}'>Edit</a> 
 
-<a href='{{url_for('deleteEquipmentItem',catagory_id = i.Catagory_id, equipment_id = i.id)}}'>Delete</a>
+<a href='{{url_for('deleteEquipmentItem',catagory_id = r.Catagory_id, equipment_id = r.id)}}'>Delete</a>
 
 
 </br>

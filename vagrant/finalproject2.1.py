@@ -1,16 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
-app = Flask(__name__)
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sports_setup import Base, Catagory, equipment
 from flask import session as login_session
-import random, string
+import random
+import string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 from flask import make_response
 import requests
+app = Flask(__name__)
 
 
 CLIENT_ID = json.loads(
@@ -88,8 +90,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(json.dumps
+                                 ('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -114,23 +116,26 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;"'
+    output += '"-webkit-border-radius: 150px;-moz-border-radius: 150px;">'
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+
 
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         print 'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(json.dumps
+                                 ('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print 'In gdisconnect access token is %s', access_token
     print 'User name is: '
     print login_session['username']
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s'%login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print 'result is '
@@ -145,7 +150,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return redirect(url_for('catagory'))
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps('Failed torevoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -153,15 +158,16 @@ def gdisconnect():
 @app.route('/')
 def catagory():
     catagories = session.query(Catagory).all()
-    return render_template('catagories.html', catagories= catagories)
+    return render_template('catagories.html', catagories=catagories)
+
 
 # page 2 add new catagory
-@app.route('/catagory/new' , methods = ['GET', 'POST'])
+@app.route('/catagory/new', methods=['GET', 'POST'])
 def addcatagory():
     if 'username' not in login_session:
             return redirect('/login')
     if request.method == 'POST':
-        newItem = Catagory(name = request.form['name'])
+        newItem = Catagory(name=request.form['name'])
         session.add(newItem)
         session.commit()
         flash("catagory added")
@@ -169,26 +175,29 @@ def addcatagory():
     else:
         return render_template('addCata.html')
 
+
 # page 3 delete a catagory
-@app.route('/catagory/<int:catagory_id>/delete', methods = ['GET', 'POST'])
+@app.route('/catagory/<int:catagory_id>/delete', methods=['GET', 'POST'])
 def deletecatagory(catagory_id):
     if 'username' not in login_session:
             return redirect('/login')
-    itemtodelete = session.query(Catagory).filter_by(id =catagory_id).one()
+    itemtodelete = session.query(Catagory).filter_by(id=catagory_id).one()
     if request.method == 'POST':
         session.delete(itemtodelete)
         session.commit()
         flash("catagory deleted")
         return redirect(url_for('catagory'))
     else:
-        return render_template('deleteCata.html', catagory_id = catagory_id, itemtodelete= itemtodelete)
+        return render_template('deleteCata.html', catagory_id=catagory_id,
+                               itemtodelete=itemtodelete)
+
 
 # page 4 edit a catagory name
-@app.route('/catagory/<int:catagory_id>/edit', methods = ['GET', 'POST'])
+@app.route('/catagory/<int:catagory_id>/edit', methods=['GET', 'POST'])
 def editcatagory(catagory_id):
     if 'username' not in login_session:
             return redirect('/login')
-    edititem = session.query(Catagory).filter_by(id =catagory_id).one()
+    edititem = session.query(Catagory).filter_by(id=catagory_id).one()
     if request.method == 'POST':
         if request.form['name']:
             edititem.name = request.form['name']
@@ -197,38 +206,46 @@ def editcatagory(catagory_id):
         flash("catagory edited")
         return redirect(url_for('catagory'))
     else:
-        return render_template('editCata.html', catagory_id= catagory_id, e= edititem)
+        return render_template('editCata.html', catagory_id=catagory_id,
+                               e=edititem)
+
 
 # page 5 list all equipments for a catagory
 @app.route('/catagory/<int:catagory_id>/equipment')
 def equipmentItem(catagory_id):
-        ce = session.query(Catagory).filter_by(id = catagory_id).one()
-        items = session.query(equipment).filter_by(Catagory_id = catagory_id).all()
-        return render_template('equipment.html',  items = items, catagory_id = catagory_id, ce = ce)
+        ce = session.query(Catagory).filter_by(id=catagory_id).one()
+        items = session.query(equipment).filter_by(Catagory_id=catagory_id).all()
+        return render_template('equipment.html',
+                               items=items, catagory_id=catagory_id, ce=ce)
 
 
 # page 6 add a new equipment for a catagory
-@app.route('/catagory/<int:catagory_id>/new', methods=['GET','POST'])
+@app.route('/catagory/<int:catagory_id>/new', methods=['GET', 'POST'])
 def newEquipmentItem(catagory_id):
     if 'username' not in login_session:
             return redirect('/login')
-    catagory = session.query(Catagory).filter_by(id =catagory_id).one()
+    catagory = session.query(Catagory).filter_by(id=catagory_id).one()
     if request.method == 'POST':
-        newequip = equipment(name = request.form['name'], description = request.form['description'], price = request.form['price'], Catagory_id = catagory_id)
+        newequip = equipment(name=request.form['name'],
+                             description=request.form['description'],
+                             price=request.form['price'],
+                             Catagory_id=catagory_id)
         session.add(newequip)
         session.commit()
         flash("equipment added")
-        return redirect(url_for('equipmentItem', catagory_id = catagory_id))
+        return redirect(url_for('equipmentItem', catagory_id=catagory_id))
     else:
-        return render_template('addEquip.html', catagory_id = catagory_id, c = catagory)
+        return render_template('addEquip.html', catagory_id=catagory_id,
+                               c=catagory)
 
 
 # page 7 edit an equipment item
-@app.route('/catagory/<int:catagory_id>/<int:equipment_id>/edit', methods = ['GET', 'POST'])
+@app.route('/catagory/<int:catagory_id>/<int:equipment_id>/edit',
+           methods=['GET', 'POST'])
 def editEquipmentItem(catagory_id, equipment_id):
     if 'username' not in login_session:
             return redirect('/login')
-    eitem = session.query(equipment).filter_by(id = equipment_id).one()
+    eitem = session.query(equipment).filter_by(id=equipment_id).one()
     if request.method == 'POST':
         if request.form['name']:
             eitem.name = request.form['name']
@@ -239,35 +256,39 @@ def editEquipmentItem(catagory_id, equipment_id):
         session.add(eitem)
         session.commit()
         flash("equipment edited")
-        return redirect(url_for('equipmentItem', catagory_id = catagory_id))
+        return redirect(url_for('equipmentItem', catagory_id=catagory_id))
     else:
-        return render_template('2editEquipmentitem.html', catagory_id = catagory_id,equipment_id = equipment_id, eitem = eitem)
+        return render_template('2editEquipmentitem.html',
+                               catagory_id=catagory_id,
+                               equipment_id=equipment_id,
+                               eitem=eitem)
+
 
 # page 8 delete an equipment item
-@app.route('/catagory/<int:catagory_id>/<int:equipment_id>/delete', methods = ['GET','POST'])
+@app.route('/catagory/<int:catagory_id>/<int:equipment_id>/delete',
+           methods=['GET', 'POST'])
 def deleteEquipmentItem(catagory_id, equipment_id):
     if 'username' not in login_session:
             return redirect('/login')
-    item = session.query(equipment).filter_by(id = equipment_id ).one()
+    item = session.query(equipment).filter_by(id=equipment_id).one()
     if request.method == 'POST':
         session.delete(item)
         session.commit()
         flash("equipment deleted")
-        return redirect(url_for('equipmentItem', catagory_id = catagory_id))
+        return redirect(url_for('equipmentItem', catagory_id=catagory_id))
     else:
 
-        return render_template('deleteEquip.html',catagory_id = catagory_id, equipment_id = equipment_id, item = item)
+        return render_template('deleteEquip.html', catagory_id=catagory_id,
+                               equipment_id=equipment_id, item=item)
 
-#JSON endpoint to pull all the equipment for a catagory
+
+# JSON endpoint to pull all the equipment for a catagory
 @app.route('/catagory/<int:catagory_id>/JSON')
 def catagoryEquipJSON(catagory_id):
-    equips = session.query(equipment).filter_by(Catagory_id = catagory_id).all()
+    equips = session.query(equipment).filter_by(Catagory_id=catagory_id).all()
     return jsonify(Equipments=[i.serialize for i in equips])
-
-
-
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    #app.debug = True
-    app.run(host = '0.0.0.0', port = 5000)
+#   app.debug = True
+    app.run(host='0.0.0.0', port=5000)

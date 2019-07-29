@@ -6,9 +6,10 @@
 
 <body>
 
-<h1> Catagories </h1>
+<h1> Catagories: </h1>
 </br>
-</br>
+
+
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 
@@ -24,7 +25,8 @@
 <body>
 
 <a href = '{{url_for('addcatagory')}}'>Add New Catagory</a>
-
+</br>
+</br>
 
 {%for x in catagories%}
 

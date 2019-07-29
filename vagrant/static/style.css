@@ -1,13 +1,13 @@
 body {
     font-family: Monospace;
-    background-color: black;
+    background-color: blue;
 }
 
 h1,
 h2,
 h3,
 h4 {
-    color: #ffffff;
+    color: white;
 }
 
 h1,
@@ -44,7 +44,7 @@ a {
     padding: 5px;
     margin: 5px;
     border-color: #999999;
-    background-color: #ffffff;
+    background-color: white;
 }
 
 .header {
@@ -69,5 +69,6 @@ a {
 .editdeletepane {}
 
 .flash {
-    background: Red;
+    color: white;
+}
 }
