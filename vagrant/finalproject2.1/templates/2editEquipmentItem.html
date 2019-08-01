@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<link rel=stylesheet type=text/css href="{{url_for('static', filename ='style.css')}}">
+</head>
+
+<body>
+
+<form action= "{{url_for('editEquipmentItem', catagory_id= catagory_id, equipment_id= eitem.id)}}" method = 'post'>
+
+<h1>Please edit any of the items below</h1>
+
+<p>Name:
+<input type = 'text' size='30' name = 'name' placeholder = '{{eitem.name}}'>
+</br>
+</p>
+
+<p>Description:
+<input type = 'text' size='30' name = 'description' placeholder = '{{eitem.description}}'>
+</br>
+</p>
+
+<p>Price:
+<input type = 'text' size='30' name = 'price' placeholder = '{{eitem.price}}'>
+</br>
+</p>
+
+<input type='submit' value='Edit'>
+
+</form> 
+
+<a href= '{{url_for('equipmentItem', catagory_id = eitem.Catagory_id)}}'>Cancel</a>
+
+
+</body>
+</html>

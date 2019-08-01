@@ -1,0 +1,22 @@
+<html>
+
+<head>
+<link rel=stylesheet type=text/css href="{{url_for('static', filename ='style.css')}}">
+</head>
+
+<body>
+<form action= '{{url_for('editcatagory', catagory_id = e.id)}}' method = 'post'>
+
+<h1>Edit catagory name</h1>
+
+<input type = 'text' size='30' name = 'name' placeholder = '{{e.name}}'>
+
+
+<input type='submit' value='Edit'>
+
+</form> 
+
+<a href= '{{url_for('catagory')}}'>Cancel</a>
+
+</body>
+</html>
