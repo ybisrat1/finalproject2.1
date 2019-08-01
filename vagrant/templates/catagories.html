@@ -9,6 +9,10 @@
 <h1> Catagories: </h1>
 </br>
 
+<a href='{{url_for('showLogin',)}}'>Login</a>
+<a href='{{url_for('gdisconnect',)}}'>Logout</a>
+</br>
+</br>
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -26,7 +30,7 @@
 
 <a href = '{{url_for('addcatagory')}}'>Add New Catagory</a>
 </br>
-</br>
+
 
 {%for x in catagories%}
 
